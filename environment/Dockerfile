@@ -1,23 +1,19 @@
-FROM ubuntu:22.04
+# hash:sha256:6b51d31ef1e4ba5d291c0783e8946ba73f56420aba11f3bcfcb9bcf3e23e60f1
+FROM registry.codeocean.com/codeocean/ubuntu:20.04-cuda11.7.0-cudnn8
 
-RUN apt-get update && apt-get install -y wget && \
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash Miniconda3-latest-Linux-x86_64.sh -b && \
-    rm -f Miniconda3-latest-Linux-x86_64.sh
+ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PATH /root/miniconda3/bin:$PATH
+ENV PATH=/root/miniforge3/bin:/usr/local/cuda-11.3/bin:$PATH
+ENV CPATH=/usr/local/cuda-11.3/include:$CPATH
+ENV LD_LIBRARY_PATH=/usr/local/cuda-11.3/lib64:$LD_LIBRARY_PATH
 
-WORKDIR /eMOSIAC
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        cuda-libraries-11-3=11.3.1-1 \
+        cuda-libraries-dev-11-3=11.3.1-1 \
+        cuda-toolkit-11-3=11.3.1-1 \
+        wget=1.20.3-1ubuntu2.1 \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY environment.yml /eMOSIAC/environment.yml
-
-RUN conda env create -f environment.yml && \
-    echo "source activate eMOSIAC" > ~/.bashrc && \
-    /bin/bash -c "source activate eMOSIAC && \
-    pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1+cu113 --extra-index-url https://download.pytorch.org/whl/cu113 && \
-    pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-1.12.1+cu113.html && \
-    pip install torch-geometric==2.2.0 && \
-    conda install -c conda-forge rdkit"
-
-
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "eMOSIAC", "/bin/bash"]
+COPY postInstall /
+RUN /postInstall

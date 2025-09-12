@@ -21,7 +21,7 @@ sys.path.append(str(BINDING_AFFINITY_MODULE_DIR))
 sys.path.append(str(ANOMALY_DETECTION_DIR))
 
 from BindingAffinityModule.dataset import BindingDataset, collate_fn
-from BindingAffinityModule.model import BindingModel2, BindingModel
+from BindingAffinityModule.model import BindingModel2
 from BindingAffinityModule.models.ligand_graph_features import mol_to_graph_data_obj_simple
 from AnomalyDetection.utils import *
 
@@ -89,9 +89,9 @@ def prepare_chemical_graphs(smiles_list):
 
 def load_binding_model(config, device):
     """
-    Initialize the BindingModel and load the trained weights.
+    Initialize the BindingModel2 and load the trained weights.
     """
-    model = BindingModel(
+    model = BindingModel2(
         num_layer=config['num_layers'],
         emb_dim=config['chem_embed_dim'],
         dropout=config['dropout'],

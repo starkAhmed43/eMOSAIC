@@ -20,9 +20,9 @@ def main(args):
     with open(checkpoint_dir + 'config.json', 'w') as f:
         json.dump(vars(args), f)
 
-    train_df = pd.read_csv(f'../embeddings/datasets/md_dataset_train_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
-    test_df = pd.read_csv(f'../embeddings/datasets/md_dataset_test_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
-    valid_df = pd.read_csv(f'../embeddings/datasets/md_dataset_valid_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
+    train_df = pd.read_csv(f'../data/datasets/md_dataset_train_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
+    test_df = pd.read_csv(f'../data/datasets/md_dataset_test_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
+    valid_df = pd.read_csv(f'../data/datasets/md_dataset_valid_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
 
     X_train, y_train = load_and_split_data(train_df, args)
     X_test, y_test = load_and_split_data(test_df, args)

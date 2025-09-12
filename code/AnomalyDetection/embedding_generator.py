@@ -26,10 +26,10 @@ from BindingAffinityModule.model import BindingModel
 
 
 def generate_and_save_embeddings(model, loader, df, set_name, device):
-    if not os.path.exists('../embeddings'):
-        os.makedirs('../embeddings')
+    if not os.path.exists('../data/model_embeddings/'):
+        os.makedirs('../data/model_embeddings/')
 
-    attention_file_path = f"../embeddings/residual_attention_{set_name}_.csv"
+    attention_file_path = f"../data/model_embeddings/residual_attention_{set_name}_.csv"
     batch_size = loader.batch_size
 
     with torch.no_grad():
@@ -61,11 +61,11 @@ def generate_and_save_embeddings(model, loader, df, set_name, device):
 
 def main(args):
 
-    train_data = pd.read_csv(f'../datasets/{args.data_split}/train_rs_{args.seed}_{args.data_split}.csv')
-    valid_data = pd.read_csv(f'../datasets/{args.data_split}/valid_rs_{args.seed}_{args.data_split}.csv')
-    test_data = pd.read_csv(f'../datasets/{args.data_split}/test_rs_{args.seed}_{args.data_split}.csv')
+    train_data = pd.read_csv(f'../data/datasets/{args.data_split}/train_rs_{args.seed}_{args.data_split}.csv')
+    valid_data = pd.read_csv(f'../data/datasets/{args.data_split}/valid_rs_{args.seed}_{args.data_split}.csv')
+    test_data = pd.read_csv(f'../data/datasets/{args.data_split}/test_rs_{args.seed}_{args.data_split}.csv')
 
-    with open('../mapping/pfam2value_map.pkl', 'rb') as f:
+    with open('../data/pfam2value_map.pkl', 'rb') as f:
         uniprot2intmap = pickle.load(f)
 
     train_loader = DataLoader(BindingDataset(train_data, args.max_length, True), batch_size=args.batch_size_extractor, shuffle=False, collate_fn=lambda batch: collate_fn(batch, args.max_length, uniprot2intmap))

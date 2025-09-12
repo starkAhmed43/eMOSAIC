@@ -7,12 +7,12 @@ import numpy as np
 import argparse
 
 def main(args):
-    if not os.path.exists('../embeddings/datasets'):
-        os.makedirs('../embeddings/datasets')
+    if not os.path.exists('../data/model_embeddings/'):
+        os.makedirs('../data/model_embeddings/')
 
-    train_df = pd.read_csv(f'../embeddings/residual_attention_train_{args.data_split}_seed_{args.seed}_.csv')
-    test_df = pd.read_csv(f'../embeddings/residual_attention_test_{args.data_split}_seed_{args.seed}_.csv')
-    valid_df = pd.read_csv(f'../embeddings/residual_attention_valid_{args.data_split}_seed_{args.seed}_.csv')
+    train_df = pd.read_csv(f'../data/model_embeddings/residual_attention_train_{args.data_split}_seed_{args.seed}_.csv')
+    test_df = pd.read_csv(f'../data/model_embeddings/residual_attention_test_{args.data_split}_seed_{args.seed}_.csv')
+    valid_df = pd.read_csv(f'../data/model_embeddings/residual_attention_valid_{args.data_split}_seed_{args.seed}_.csv')
     train_embeddings = train_df[[f'combined_{i}' for i in range(1004)]].values
     test_embeddings = test_df[[f'combined_{i}' for i in range(1004)]].values
     valid_embeddings = valid_df[[f'combined_{i}' for i in range(1004)]].values
@@ -68,9 +68,9 @@ def main(args):
 
     print('Dataset Ready for Anomaly Detection')
 
-    df_X_train.to_csv(f'../embeddings/datasets/md_dataset_train_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
-    df_X_test.to_csv(f'../embeddings/datasets/md_dataset_test_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
-    df_X_valid.to_csv(f'../embeddings/datasets/md_dataset_valid_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
+    df_X_train.to_csv(f'../data/model_embeddings/md_dataset_train_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
+    df_X_test.to_csv(f'../data/model_embeddings/md_dataset_test_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
+    df_X_valid.to_csv(f'../data/model_embeddings/md_dataset_valid_{args.data_split}_num_clusters_{args.num_clusters}_iters_{args.iters}_scaling_{args.scaling}_seed_{args.seed}.csv')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generating Datasets')

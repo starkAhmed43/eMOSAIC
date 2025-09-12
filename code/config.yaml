@@ -1,5 +1,5 @@
 #
-path2uniprot2map: '../mapping/pfam2value_map.pkl'
+path2uniprot2map: '../data/pfam2value_map.pkl'
 
 max_length: 700
 seed: 42

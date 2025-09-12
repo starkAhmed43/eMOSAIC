@@ -33,9 +33,9 @@ def main(args):
         uniprot2intmap = pickle.load(f)
     reverse_identifier_dict = {v: k for k, v in uniprot2intmap.items()}
 
-    train_data = pd.read_csv(f'../datasets/{args.data_split}/train_rs_{args.seed}_{args.data_split}.csv')
-    valid_data = pd.read_csv(f'../datasets/{args.data_split}/valid_rs_{args.seed}_{args.data_split}.csv')
-    test_data = pd.read_csv(f'../datasets/{args.data_split}/test_rs_{args.seed}_{args.data_split}.csv')
+    train_data = pd.read_csv(f'../data/datasets/{args.data_split}/train_rs_{args.seed}_{args.data_split}.csv')
+    valid_data = pd.read_csv(f'../data/datasets/{args.data_split}/valid_rs_{args.seed}_{args.data_split}.csv')
+    test_data = pd.read_csv(f'../data/datasets/{args.data_split}/test_rs_{args.seed}_{args.data_split}.csv')
 
     test_data_copy = test_data
 

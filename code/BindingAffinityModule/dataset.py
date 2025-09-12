@@ -77,7 +77,7 @@ class BindingDataset(Dataset):
         """
         Loading dict for mapping
         """
-        dir_path = '../mapping/pfam2value_map.pkl'
+        dir_path = '../data/pfam2value_map.pkl'
         with open(dir_path, 'rb') as f:
             loaded_dict = pickle.load(f)
 
