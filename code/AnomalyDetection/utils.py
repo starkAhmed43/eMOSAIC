@@ -6,6 +6,8 @@ import pandas as pd
 import numpy as np
 import torch
 import os
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+from scipy.stats import pearsonr, spearmanr
 
 def mahalanobis_distance_dataset(embeddings, centroids, inverse_cov_matrices, num_clusters):
     num_clusters = len(centroids)
@@ -104,3 +106,52 @@ def create_df_results(pred, df, file_name, checkpoint_dir):
     df_results[f'Tolerance {tolerance}'] = np.where(df_results['predicted_residue'] < tolerance, 'Normal', 'Outlier')
     file_path = os.path.join(checkpoint_dir, f'residues_values_analysis_{file_name}.csv')
     df_results.to_csv(file_path)
+
+def evaluate_metrics(pred, df, file_name, seed, checkpoint_dir):
+
+    df_results = pd.DataFrame({
+        'Predicted Residue': pred,
+        'True Residue': abs(df['y_true'] - df['y_pred']),
+        'y_true': df['y_true'],
+        'y_pred': df['y_pred'],
+        'SMILES': df['SMILES'],
+        'uniprot|pfam': df['uniprot|pfam']
+    })
+
+    tolerance = 0.5
+    df_results[f'Tolerance {tolerance}'] = np.where(df_results['Predicted Residue'] < tolerance, 'Normal', 'Outlier')
+
+    pearson_corr_all, _ = pearsonr(df_results['y_pred'], df_results['y_true'])
+    spearman_corr_all, _ = spearmanr(df_results['y_pred'], df_results['y_true'])
+    rmse_all = mean_squared_error(df_results['y_true'], df_results['y_pred'], squared=False)
+    mae_all = mean_absolute_error(df_results['y_true'], df_results['y_pred'])
+
+    filtered_df = df_results[df_results['Predicted Residue'] <= tolerance]
+    if not filtered_df.empty:
+        pearson_corr_filtered, _ = pearsonr(filtered_df['y_pred'], filtered_df['y_true'])
+        spearman_corr_filtered, _ = spearmanr(filtered_df['y_pred'], filtered_df['y_true'])
+        rmse_filtered = mean_squared_error(filtered_df['y_true'], filtered_df['y_pred'], squared=False)
+        mae_filtered = mean_absolute_error(filtered_df['y_true'], filtered_df['y_pred'])
+    else:
+        pearson_corr_filtered = np.nan
+        spearman_corr_filtered = np.nan
+        rmse_filtered = np.nan
+        mae_filtered = np.nan
+
+    metrics = {
+        'Seed': seed,
+        'Dataset': file_name,
+        'PearsonR_TrustAffinity': pearson_corr_all,
+        'SpearmanR_TrustAffinity': spearman_corr_all,
+        'RMSE_TrustAffinity': rmse_all,
+        'MAE_TrustAffinity': mae_all,
+        'PearsonR_eMOSAIC': pearson_corr_filtered,
+        'SpearmanR_eMOSAIC': spearman_corr_filtered,
+        'RMSE_eMOSAIC': rmse_filtered,
+        'MAE_eMOSAIC': mae_filtered
+    }
+
+    result_file = os.path.join(checkpoint_dir, f"metrics_summary_{file_name}_seed_{seed}.csv")
+    pd.DataFrame([metrics]).to_csv(result_file, index=False)
+
+    return metrics

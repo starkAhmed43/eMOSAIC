@@ -51,3 +51,24 @@ To reproduce the binding affinity prediction and uncertainty quantification resu
 ```bash
 python reproducible_run.py
 ```
+
+## Pretrained Models and Reproducibility
+
+For full reproducibility, including access to pretrained models and complete input files, we provide a ready-to-run Code Ocean capsule:
+
+https://codeocean.com/capsule/2486685/tree/v1
+
+The capsule contains all pretrained checkpoints, processed datasets, and scripts required to reproduce the binding affinity prediction and uncertainty quantification results reported in our manuscript.
+
+## Citation
+If you find our model and code helpful in your work, please consider citing us:
+```
+@article{badkul2025multimodal,
+  title={Multimodal out-of-distribution individual uncertainty quantification enhances binding affinity prediction for polypharmacology},
+  author={Badkul, Amitesh and Xie, Li and Zhang, Shuo and Xie, Lei},
+  journal={Nature Machine Intelligence},
+  pages={1--11},
+  year={2025},
+  publisher={Nature Publishing Group UK London}
+}
+```

@@ -10,7 +10,7 @@ import sklearn
 import torch
 import json
 
-from utils import set_up_exp_folder, load_and_split_data, str2bool, SimpleMLP, evaluate_model, create_df_results
+from utils import set_up_exp_folder, load_and_split_data, str2bool, SimpleMLP, evaluate_model, create_df_results, evaluate_metrics
 
 def main(args):
 
@@ -82,10 +82,15 @@ def main(args):
     create_df_results(train_pred, train_df, 'train', checkpoint_dir)
     create_df_results(valid_pred, valid_df, 'valid', checkpoint_dir)
     create_df_results(test_pred, test_df, 'test', checkpoint_dir)
+    print('This is for seed:', args.seed)
+    evaluate_metrics(train_pred, train_df, 'train', args.seed, args.result_path)
+    evaluate_metrics(valid_pred, valid_df, 'valid', args.seed, args.result_path)
+    evaluate_metrics(test_pred, test_df, 'test', args.seed, args.result_path)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Training model')
-    parser.add_argument('--result_path', type=str, default='../results/logs_md/', help='path to save best model')
+    parser.add_argument('--result_path', type=str, default='../results/', help='path to save best model')
     parser.add_argument('--num_clusters', type=int, default=50, help='Number of clusters for KMeans')
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for training for MLP')
     parser.add_argument('--epochs', type=int, default=10, help='Number of training epochs')
