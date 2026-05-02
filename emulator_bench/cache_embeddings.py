@@ -203,7 +203,7 @@ def main():
     parser.add_argument("--_worker", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--base_dir", type=str, default=str(DEFAULT_BASE_DIR))
     parser.add_argument("--embeddings_dir", type=str, default=str(DEFAULT_EMBEDDINGS_DIR))
-    parser.add_argument("--split_groups", nargs="+", default=DEFAULT_SPLIT_GROUPS)
+    parser.add_argument("--split_groups", nargs="+", default=None)
     parser.add_argument("--threshold", type=str, default=None)
     parser.add_argument("--thresholds", nargs="+", default=None)
     parser.add_argument("--sequence_col", type=str, default="sequence")
@@ -267,7 +267,7 @@ def main():
         "embeddings_dir": str(args.embeddings_dir),
         "sequence_col": args.sequence_col,
         "smiles_col": args.smiles_col,
-        "split_groups": list(args.split_groups),
+        "split_groups": [job["split_group"] for job in jobs],
         "thresholds": args.thresholds,
         "protein_dtype": args.protein_dtype,
         "protein_model": "esmfold_v1 (structure-module s_s)",
