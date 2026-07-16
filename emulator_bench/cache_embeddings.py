@@ -7,7 +7,13 @@ import time
 from pathlib import Path
 
 import torch
-from tqdm.auto import tqdm
+try:
+    from src.utils.rich_progress import progress, write
+except ModuleNotFoundError:
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+    from src.utils.rich_progress import progress, write
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -71,7 +77,7 @@ def cache_proteins_single_gpu(device_str, sequences, args):
     model = load_esmfold_model(device, chunk_size=args.chunk_size)
 
     written = 0
-    iterator = tqdm(pending, desc=f"[{device_str}] ESMFold embeddings", unit="seq")
+    iterator = progress(pending, desc=f"[{device_str}] ESMFold embeddings", unit="seq")
     for sequence in iterator:
         # sequence is already truncated; pass max_seq_len large enough so embed_sequences
         # doesn't try to chunk it further (it's at most max_seq_len long).
@@ -188,7 +194,7 @@ def cache_ligands(args, smiles_values):
         return {"ligands_total": len(smiles_values), "ligands_written": 0}
 
     written = 0
-    iterator = tqdm(pending, desc="Caching ligand graphs", unit="smiles")
+    iterator = progress(pending, desc="Caching ligand graphs", unit="smiles")
     for smiles in iterator:
         item = ligand_cache_item(smiles)
         save_ligand_pt(ligand_cache_path(args.embeddings_dir, smiles), item)

@@ -8,7 +8,13 @@ import threading
 from pathlib import Path
 
 import pandas as pd
-from tqdm.auto import tqdm
+try:
+    from src.utils.rich_progress import progress, write
+except ModuleNotFoundError:
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+    from src.utils.rich_progress import progress, write
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -323,9 +329,9 @@ def main():
         summary_rows = run_parallel(jobs, args)
     else:
         summary_rows = []
-        for job in tqdm(jobs, desc="Benchmark jobs", unit="job"):
+        for job in progress(jobs, desc="Benchmark jobs", unit="job"):
             for seed in args.seeds:
-                tqdm.write(f"  {job['split_group']} | {job['split_name']} | threshold {job['difficulty']} | seed {seed}")
+                write(f"  {job['split_group']} | {job['split_name']} | threshold {job['difficulty']} | seed {seed}")
                 out_dir = train_one(job, seed, args)
                 summary_rows.append(_collect_row(job, seed, out_dir, args))
 
